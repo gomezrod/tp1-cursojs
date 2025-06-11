@@ -101,11 +101,11 @@ const recetas = [
 
 //Personalización de experiencia de usuario
 sessionStorage.removeItem('recetasVistas');
-let nombre = localStorage.getItem("userName");
+let nombre = sessionStorage.getItem("userName");
 
-if (!localStorage.getItem("userName")) {
+if (!sessionStorage.getItem("userName")) {
     nombre = prompt("Bienvenido/a! Ingresá tu nombre para comenzar:");
-    localStorage.setItem("userName", nombre);
+    sessionStorage.setItem("userName", nombre);
 }
 
 if (nombre) {
@@ -115,8 +115,8 @@ if (nombre) {
 //Funciones para selección y muestra de información
 
 function mostrarIngredientes (receta) {
-    let cantidad = prompt("Ingrese la cantidad de porciones, en caso de no saber dejar en 0");
-    if (cantidad === '0') {
+    let cantidad = prompt("Ingrese la cantidad de porciones, en caso de no saber ingresar 0 o dejar en blanco");
+    if (cantidad === '' || cantidad === '0') {
         eliminarParrafo('lista'); 
         eliminarParrafo('ingredientes');
         let titulo = `Ingredientes para ${receta.porciones} porciones: `;
@@ -124,7 +124,7 @@ function mostrarIngredientes (receta) {
         console.log(titulo);
         for (let item of receta.ingredientes) {
             let cant = item.cantidad;
-            if (item.cantidad == 0) {
+            if (item.cantidad === null) {
                 cant = '';
             }
             let txt = `${item.nombre}: ${cant} ${item.unidad}`;

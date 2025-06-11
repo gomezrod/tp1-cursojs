@@ -9,6 +9,11 @@ body {
     padding-bottom: 2rem;
 }
 
+.explicacion {
+    font-weight: 100;
+    font-style: italic;
+}
+
 .contenedor-receta{
     display: flex;
     flex-direction: row;
