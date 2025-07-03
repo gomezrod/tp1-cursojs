@@ -1,8 +1,8 @@
-const titulo = document.getElementById("titulo");
-const head = document.getElementById("head");
-const botonVer = document.getElementById("botonVer");
-const botonElegir = document.getElementById("botonElegir");
-const contenedor = document.getElementById("contenedorReceta");
+const titulo = document.querySelector('#titulo');
+const head = document.querySelector('#head');
+const botonVer = document.querySelector('#botonVer');
+const botonElegir = document.querySelector('#botonElegir');
+const contenedor = document.querySelector('#contenedorReceta');
 
 //Array de objetos a modo de base de datos
 const recetas = [
@@ -117,23 +117,21 @@ if (nombre) {
 function mostrarIngredientes (receta) {
     let cantidad = prompt("Ingrese la cantidad de porciones, en caso de no saber ingresar 0 o dejar en blanco");
     if (cantidad === '' || cantidad === '0') {
-        eliminarParrafo('lista'); 
-        eliminarParrafo('ingredientes');
+        eliminarElemento('lista'); 
+        eliminarElemento('ingredientes');
         let titulo = `Ingredientes para ${receta.porciones} porciones: `;
         agregarParrafo(titulo, 'ingredientes');
-        console.log(titulo);
         for (let item of receta.ingredientes) {
             let cant = item.cantidad;
             if (item.cantidad === null) {
                 cant = '';
             }
             let txt = `${item.nombre}: ${cant} ${item.unidad}`;
-            console.log(txt);
             agregarParrafo(txt, 'ingredientes');
         }
     } else {
-        eliminarParrafo('lista');
-        eliminarParrafo('ingredientes');
+        eliminarElemento('lista');
+        eliminarElemento('ingredientes');
         let calc = Number(cantidad) / Number(receta.porciones);
         let titulo = `Ingredientes para ${cantidad} porciones: `;
         agregarParrafo(titulo, 'ingredientes');
@@ -143,7 +141,6 @@ function mostrarIngredientes (receta) {
                 cantidadCalculada = ''
             };
             let txt = `${item.nombre}: ${cantidadCalculada} ${item.unidad}`;
-            console.log(txt);
             agregarParrafo(txt, 'ingredientes');
         }
     }
@@ -152,40 +149,40 @@ function mostrarIngredientes (receta) {
 function mostrarPreparacion(receta) {
     const recetaArray=receta.preparacion.split('*');
     let titulo = 'Instrucciones para la preparación:';
-    console.log(titulo);
     agregarParrafo(titulo, 'preparacion');
     
     for(let p of recetaArray){
-        console.log(p);
         agregarParrafo(p, 'preparacion');
     }
 }
 
 function mostrarLista(){
     let hayLista = document.getElementById('lista');
-    
-    if(document.getElementById('ingredientes')){
-        let element = document.getElementById('ingredientes');
-        element.remove();
+  
+    eliminarElemento('ingredientes');
+    eliminarElemento('preparacion');
+
+
+    if (!hayLista) {
+        let txt = `
+            <h2>Recetas disponibles:</h2>
+            <ol>
+            ${recetas.map((receta) => `<li>${receta.nombre}</li>`).join('')}
+            </ol>
+        `;
+        agregarParrafo(txt, 'lista');
     }
 
-    if (document.getElementById('preparacion')) {
-        let element = document.getElementById('preparacion');
-        element.remove();
-    }
+    // let i = 1;
+    // for (const item of recetas) {
+    //     let txt = i + ". " + item.nombre
+    //     console.log(txt);
+    //     if(!hayLista){
+    //         agregarParrafo(txt, 'lista');
+    //     }
+    //     i++;
+    // }
 
-    console.log("Lista de recetas");
-    console.log("*----------------------------*");
-    let i = 1;
-    for (const item of recetas) {
-        let txt = i + ". " + item.nombre
-        console.log(txt);
-        if(!hayLista){
-            agregarParrafo(txt, 'lista');
-        }
-        i++;
-    }
-    console.log("*----------------------------*");
 }
 
 //Funciones para modificación del DOM
@@ -216,10 +213,52 @@ function agregarParrafo (p, id) {
     }
 }
 
-function eliminarParrafo (id) {
+function eliminarElemento (id) {
     let element = document.getElementById(id);
     if(element){
         element.remove();
+    }
+}
+
+function agregarBoton (id, txt) {
+    if(!document.getElementById(id)){
+        const boton = document.createElement('button');
+        boton.setAttribute('id', id);
+        boton.classList.add('boton');
+        boton.innerHTML = txt;
+        document.querySelector('.boton__contenedor').appendChild(boton);
+
+        if(id === 'botonAgregarFavorito'){
+            boton.addEventListener('click', () => {
+                let recetaElegida = sessionStorage.getItem('recetaElegida');
+                if(recetaElegida){
+                    alert(`Receta "${recetas[recetaElegida - 1].nombre}" agregada a favoritos!`);
+                    let recetaFavorita = {
+                        nombre: recetas[recetaElegida - 1].nombre,
+                        porciones: recetas[recetaElegida - 1].porciones,
+                        ingredientes: recetas[recetaElegida - 1].ingredientes,
+                        preparacion: recetas[recetaElegida - 1].preparacion,
+                        id: recetaElegida -1
+                    }
+                    sessionStorage.setItem('recetaFavorita', JSON.stringify(recetaFavorita));
+                }else{
+                    alert('No se ha seleccionado ninguna receta');
+                }
+            });
+        }
+
+        if(id === 'botonVerFavorito'){
+            boton.addEventListener('click', () => {
+                let recetaFavorita = JSON.parse(sessionStorage.getItem('recetaFavorita'));
+                if(recetaFavorita){
+                    mostrarIngredientes(recetaFavorita);
+                    mostrarPreparacion(recetaFavorita);
+                    sessionStorage.removeItem('recetasVistas');
+                }else{
+                    alert('No hay receta favorita guardada');
+                }
+            });
+        }
     }
 }
 
@@ -227,6 +266,10 @@ function eliminarParrafo (id) {
 
 botonVer.addEventListener("click", () => {
     sessionStorage.setItem("recetasVistas", true);
+    eliminarElemento('botonAgregarFavorito');
+    if(sessionStorage.getItem('recetaElegida')){
+        agregarBoton('botonVerFavorito', 'Ver receta favorita');
+    }
     mostrarLista();
 })
 
@@ -237,6 +280,9 @@ botonElegir.addEventListener("click", () => {
         if (recetas[seleccion - 1]) {
             mostrarIngredientes(recetas[seleccion - 1]);
             mostrarPreparacion(recetas[seleccion - 1]);
+            sessionStorage.setItem('recetaElegida', seleccion);
+            agregarBoton('botonAgregarFavorito', 'Agregar a favoritos');
+            sessionStorage.removeItem('recetasVistas');
         } else {
             alert(`No se encontró la receta con el número ${seleccion}, revisar elección`);
 
@@ -245,3 +291,19 @@ botonElegir.addEventListener("click", () => {
         alert('Primero hacé click en "Ver recetas"')
     }
 })
+
+botonVer.addEventListener("mouseover", () => {
+    botonVer.classList.add('encendido');
+});
+
+botonVer.addEventListener("mouseout", () => {
+    botonVer.classList.remove('encendido');
+});
+
+botonElegir.addEventListener("mouseover", () => {
+    botonElegir.classList.add('encendido');
+});
+
+botonElegir.addEventListener("mouseout", () => {
+    botonElegir.classList.remove('encendido');
+});

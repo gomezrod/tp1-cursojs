@@ -29,15 +29,25 @@ body {
     }
 }
 
-.botones {
+
+
+.boton.borde-grueso {
+    border: solid black 3px;
+}
+
+.boton {
+    background-color: #dad;
+    border-radius: 1rem;
+    margin: 1rem;
+}
+
+.boton.encendido {
+    background-color: #cfc;
+}
+
+.boton__contenedor {
     display: flex;
     justify-content: center;
-    
-    button {
-        background-color: #dad;
-        border-radius: 1rem;
-        margin: 1rem;
-    }
 }
 
 .footer {
