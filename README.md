@@ -7,3 +7,10 @@ La siguiente aplicación busca brindar una solución a los usuarios que requiera
 # 2ª Actualización
 -Se trabaja sobre el código en general, agregando interacción sobre los botones, mejorando la información que se muestra en cada momento (o lista de recetas o lista de ingredientes/preparación).
 -Se agrega un sistema de almacenamiento de receta favorita, con posibilidad de recuperarla directamente en el futuro.
+
+# 3ª Actualización
+-Se separa la base de datos del código, en un archivo JSON aparte.
+-Se agrega una barra buscadora, para posibilitar la búsqueda de recetas por nombre.
+-Se trabaja sobre las funciones, haciéndolas más escalables y reutilizables.
+-Se trabaja sobre la lista de favoritos, agregando fecha.
+-Se actualizan todos los alerts y prompts con la libreria SweetAlert 2.
