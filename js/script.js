@@ -12,18 +12,30 @@ async function cargarRecetas() {
     try {
         const recetas = await fetch('../db/recetas.json');
         if (!recetas.ok) {
-            throw new Error('Error al cargar las recetas');
+            throw new Error('Error al cargar el archivo de recetas desde la ruta local');
         }
         const data = await recetas.json();
         if (data.length === 0) {
             throw new Error('No se encontraron recetas');
         }
         return data;
-    } catch (error) {
-        console.error(error);
-        titulo.innerHTML = 'Error al cargar las recetas';
-        head.appendChild(titulo);
-    }
+    } catch (error1) {
+        console.error('Error al cargar el archivo de recetas local: ', error1);
+    } try {
+            const recetas = await fetch('https://raw.githubusercontent.com/gomezrod/tp1-cursojs/refs/heads/main/db/recetas.json');
+            if (!recetas.ok) {
+                throw new Error('Error al cargar el archivo de recetas');
+            }
+            const data = await recetas.json();
+            if (data.length === 0) {
+                throw new Error('No se encontraron recetas');
+            }
+            return data;
+        } catch (error2) {
+            console.error('Error al cargar el archivo de recetas desde GitHub:', error2);
+            titulo.innerHTML = 'Error al cargar las recetas';
+            head.appendChild(titulo);
+        }
 }
 
 //Personalización de experiencia de usuario
