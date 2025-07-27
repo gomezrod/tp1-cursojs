@@ -16,8 +16,15 @@ body {
 
 .contenedor-receta{
     display: flex;
+    flex-wrap: wrap;
     flex-direction: row;
     justify-content: space-around;
+    width: 100%;
+
+    @media (max-width: 600px) {
+        flex-direction: column;
+        align-items: center;
+    }
 
     article {
         box-shadow: 1px 10px 10px;
@@ -29,7 +36,46 @@ body {
     }
 }
 
+.card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 300px;
+    max-width: 400px;
+    box-shadow: 1px 10px 10px;
+    width: 50%;
+    margin: 0.5rem;
+    padding: 0.5rem;
+    background-color: #f0f0f0;
+    border: solid black 1px;
+    border-radius: 15px;
+}
 
+.favoritos {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 90%;
+    box-shadow: 1px 10px 10px;
+    margin: 0.5rem;
+    padding: 0.5rem;
+    background-color: #f0f0f0;
+    border: solid black 1px;
+    border-radius: 15px;
+}
+
+.lista__favoritos {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 90%;
+    box-shadow: 1px 10px 10px;
+    margin: 0.5rem;
+    padding: 0.5rem;
+    background-color: #f0f0f0;
+    border: solid black 1px;
+    border-radius: 15px;
+}
 
 .boton.borde-grueso {
     border: solid black 3px;
